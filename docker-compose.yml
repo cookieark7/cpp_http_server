@@ -18,11 +18,24 @@ services:
     build: . # Tells Docker to use the Dockerfile in this folder
     env_file:
       - .env
-    ports:
-      - "8080:8080" # Map Mac port 8080 to Container port 8080
     depends_on:
       - db
     restart: on-failure # If the C++ server starts before Postgres is ready and crashes, it will automatically restart
+
+  # --- Service 3: Nginx Reverse Proxy ---
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/entrypoint.sh:/entrypoint.sh:ro
+      - ./nginx/certs:/etc/nginx/certs
+    restart: on-failure
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
 
 volumes:
   pgdata:
