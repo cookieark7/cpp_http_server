@@ -1,5 +1,0 @@
----
-triple:          'arm64-apple-darwin'
-binary-path:     '/Users/cookie/cpp_http_server/test'
-relocations:     []
-...
