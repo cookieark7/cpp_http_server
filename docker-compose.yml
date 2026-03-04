@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # --- Service 1: PostgreSQL Database ---
+  db:
+    image: postgres:15
+    env_file:
+      - .env
+    ports:
+      # Expose port 5432 to your Mac so you can still use terminal/TablePlus to view it
+      - "5432:5432" 
+    volumes:
+      # This ensures your database isn't deleted when the container stops
+      - pgdata:/var/lib/postgresql/data
+
+  # --- Service 2: Your C++ Server ---
+  api:
+    build: . # Tells Docker to use the Dockerfile in this folder
+    env_file:
+      - .env
+    ports:
+      - "8080:8080" # Map Mac port 8080 to Container port 8080
+    depends_on:
+      - db
+    restart: on-failure # If the C++ server starts before Postgres is ready and crashes, it will automatically restart
+
+volumes:
+  pgdata:
