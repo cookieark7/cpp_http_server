@@ -5,6 +5,7 @@ server
 test
 .env
 .vscode/
-nginx/certs/
+nginx/letsencrypt/
+nginx/www/
 *.crt
 *.key
